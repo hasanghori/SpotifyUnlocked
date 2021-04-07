@@ -1,0 +1,102 @@
+{% extends "BaseTemplate.html" %}
+{% block title %}Login Page{% endblock %}
+
+{% block content2 %}
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <h1></h1>
+        </div>
+    </div>
+</div>
+<div class="container">
+
+        <div class="image col-sm-8">
+            <a><img class="rounded float-left" src={{url1}} style="height: 200px; width: 200px;display:inline-block;padding: 1em; caption: "></a>
+            <hr>
+            <hr>
+            <hr>
+            <hr>
+            <hr>
+            <p style="color:white">
+                <i>{{playlistName1}}</i>
+            </p>
+            <p style="color:white">
+                Songs: {{songsNum1}}
+            </p>
+            <p style="color:white">
+                Vibe: Vibe
+            </p>
+        </div>
+        <hr>
+        <div class="image col-sm-8">
+            <a><img class="rounded float-right" src={{url2}} style="height: 200px; width: 200px;display:inline-block;padding: 1em;"></a>
+            <hr>
+            <hr>
+            <hr>
+            <hr>
+            <hr>
+            <p style="color:white; text-align:right">
+                <i>{{playlistName2}}</i>
+            </p>
+            <p style="color:white; text-align:right">
+                Songs: {{songsNum2}}
+            </p>
+            <p style="color:white; text-align:right">
+                Vibe: Vibe
+            </p>
+        </div>
+        <div class="image col-sm-8">
+            <a><img class="rounded float-left" src={{url3}} style="height: 200px; width: 200px;display:inline-block;padding: 1em;"></a>
+            <hr>
+            <hr>
+            <hr>
+            <hr>
+            <hr>
+
+            <p style="color:white">
+                <i>{{playlistName3}}</i>
+            </p>
+            <p style="color:white">
+                Songs: {{songsNum3}}
+            </p>
+            <p style="color:white">
+                Vibe: Vibe
+            </p>
+        </div>
+
+</div>
+<hr>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+          <a class="navbar-brand" href="#">Navigate</a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNavDropdown">
+            <ul class="navbar-nav">
+              <li class="nav-item active">
+                <a class="nav-link" href="/vibe">Create Vibe<span class="sr-only">(current)</span></a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/playlistCreation">Create Playlist</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/VibeViewer">Vibe Manager</a>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Dropdown link
+                </a>
+                  <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                  <a class="dropdown-item" href="#">Action</a>
+                  <a class="dropdown-item" href="#">Another action</a>
+                  <a class="dropdown-item" href="#">Something else here</a>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </nav>
+<hr>
+
+
+{% endblock %}

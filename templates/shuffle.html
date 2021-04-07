@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width,
+        initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+        <title>March Madness Site</title>
+    </head>
+    <body>
+        <!-- Nav Bars -->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <a class="navbar-brand" href="#">Spotify Unlocked</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavDropdown">
+              <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="/home">Home</a>
+                  </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="/vibe">Create Vibe</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="">Shuffle</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="/playlistCreation">Create Playlist</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="">Discover</a>
+                  </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="/VibeViewer">Vibe Manager</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/publicVibes">Public Vibes</a>
+                </li>
+              </ul>
+            </div>
+          </nav>
+        
+        <!-- Header Showcase -->
+        <header id="showcase" class = "grid">
+            <div class="bg-image-shuffle"></div>
+            <div class="content-wrap">
+                <h1>Shuffle Page</h1>
+                <p>Shuffle a Playlist Using Your Vibes</p>
+                <a href="#section-b" class="btn">View Below</a>
+            </div>
+        </header>
+
+        
+        <!-- Main Area -->
+        <main id="main">  
+            <!-- Section B -->
+            <section id="section-b" class="grid">
+                <ul>
+                    <li>
+                        <div class="card">
+                            <div class="card-content">
+                                <h3 class="card-title">Shuffle</h3>
+                                <form action = "/shuffle" method="post">
+                                <div class="form-group">
+                                  <select class="mdb-select md-form" searchable="Search here.." name="VibeName">
+                                    <option value="" disabled selected>Enter Vibe</option>
+                                        <option value="RAND0M$HUFFL3">Random Shuffle</option>  
+                                    {% for vibe in vibes %}
+                                                  <option value="{{vibe.id}}">{{vibe.vibeName}}</option>
+                                      {% endfor %}
+                                  </select>
+                                </div>
+                                <div class="form-group">
+                                    <p style="color:black">
+                                        <label>Playlist to Shuffle</label>
+                                    </p>
+                                    <select class="mdb-select md-form" searchable="Search here.." name="Playlist" 
+                                    style="width: 100%;">
+                                      <option value="" disabled selected>Where Am I Grabbing Songs From</option>
+                                        <option value="NOPLAYLIST">Auto Shuffle</option>
+                                        {% for name in playlists %}
+                                                    <option value={{playlists[name]}}>{{name}}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <p>Select <b>Auto Shuffle</b> for a shuffle of new songs based on your vibe</p>
+                                    <hr>
+                                </div>
+
+
+                                <div class="form-group">
+                                    <p style="color:black">
+                                        <label>Time of Shuffle</label>
+                                    </p>
+                                    <select class="mdb-select md-form" searchable="Search here.." name="time"
+                                    style="width: 100%;">
+                                      <option value="" disabled selected>Number of Minutes</option>
+                                        {% for time in times %}
+                                                    <option value={{time}}>{{time}}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <hr>
+                                    <button id="btn" type="submit" class="btn btn-primary">Shuffle</button>
+                                    <div id="loader" class="spinner-border" role="status">
+                                        <span class="sr-only">Loading...</span>
+                                    </div>
+                                    
+                                    <script>
+                                        document.getElementById("loader").style.display ="none";
+
+                                        function openTest() {
+                                            document.getElementById("loader").style.display = "inline-block";
+                                        }
+
+                                        document.getElementById('btn').addEventListener('click', openTest);
+
+                                    </script>
+                                </form>
+                                </div>
+                            </div>
+                            </form>
+                        </div>
+                    </li>
+                </ul>
+            </section>
+
+            <!-- Section D-->
+            <section id="section-d" class="grid">
+                <div class="box">
+                    <h2 class="content-title">About Us</h2>
+                    <p>Link to Privacy Page and about section
+                    </p>
+                </div>
+                <div class="box">
+                    <h2 class="content-title">Contact Us</h2>
+                    <p> If you have any questions feel free to send me an email or explore my tutors.com profile!</p>
+                    <p>insert some contact info</p>
+                    <p>maybe stick linkedin Page</p>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer id="main-footer" class="grid">
+            <div>Spotify Unlocked</div>
+            <div>Project by <a href="linkedin.com/in/hasanghori/"
+            target="_blank">Minaltra WebDev</a></div>
+        </footer>
+        
+        
+        <script src="https://unpkg.com/ionicons@5.2.3/dist/ionicons.js"></script>
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    </body>
+</html>
