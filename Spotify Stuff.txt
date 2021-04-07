@@ -1,0 +1,3 @@
+Client ID: 0564e53d485643aaa292796e7d73cc43
+Client Secret: 4f909fdefe51411ba1eab871be476b0f
+Redirect URI: http://127.0.0.1:8080/

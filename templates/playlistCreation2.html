@@ -1,0 +1,42 @@
+{% extends "BaseTemplate.html" %}
+{% block title %}Create Vibe{% endblock %}
+
+{% block content2 %}
+<form action = "/playlistCreation" method="post">
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <div class="form-group">
+                <p style="color:white">
+                    <label>Vibe Name</label>
+                </p>
+                <input class="form-control" type="text" name="VibeName">
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <div class="form-group">
+                <p style="color:white">
+                <label>old Playlist</label>
+                </p>
+                    <input class="form-control" type="text" name="oldPlaylist">
+                    <hr>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <div class="form-group">
+                <p style="color:white">
+                <label>new Playlist</label>
+                </p>
+                    <input class="form-control" type="text" name="newPlaylist">
+                    <hr>
+                    <button type="submit" class="btn btn-primary">Create Vibe</button>
+            </div>
+        </div>
+    </div>
+
+    </form>
+{% endblock %}

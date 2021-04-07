@@ -1,0 +1,27 @@
+<html>
+<head>
+    <title>Home Page</title>
+    </head>
+    <body>
+        <h1>YEZZIR</h1>
+        <p>{{content}}</p> <! This allows us to pass in content thorugh flask>
+        <p>{{test}}</p>
+        {% for i in range(10): %} <! allows us to write native python code within html>
+            {% if i % 2 == 1 %}
+                <p>YUZZZ</p>
+                <p>{{i}}</p>
+            {% endif %}
+        {% endfor %}
+        {% for i in list %}
+            <p>{{i}}</p>
+            {% if i == "test" %}
+                <p>yeet</p>
+            {% elif i=="ing" %}
+                <p>ers</p>
+            {% else %}
+                <p>yup</p>
+            {% endif %}
+
+        {% endfor %}
+    </body>
+</html>

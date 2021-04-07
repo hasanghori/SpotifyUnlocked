@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width,
+        initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+        <title>Tutoring Site</title>
+    </head>
+    <body>
+        <!-- Nav Bars -->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <a class="navbar-brand" href="#">Spotify Unlocked</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavDropdown">
+              <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="/login">Home</a>
+                  </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="/vibe">Create Vibe</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/shuffle">Shuffle</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="/playlistCreation">Create Playlist</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="">Discover</a>
+                  </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="/VibeViewer">Vibe Manager</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="/publicVibes">Public Vibes</a>
+                </li>
+              </ul>
+            </div>
+          </nav>
+        
+        <!-- Header Showcase -->
+        <header id="showcase" class = "grid">
+            <div class="bg-image"></div>
+            <div class="content-wrap">
+                <h1>Congratulations!</h1>
+                <p>Operation Complete! Navigate Using Buttons Below</p>
+                <a href="/home" class="btn">Home</a>
+                <a href="/vibe" class="btn">Create Vibe</a>
+                <a href="/shuffle" class="btn">Create Shuffle</a>
+                <a href="/playlistCreation" class="btn">Create Playlist</a>
+                <a href="" class="btn">Discover</a>
+                <a href="/VibeViewer" class="btn">Manage Vibes</a>
+                <a href="/publicVibes" class="btn">Access Public Vibes</a>
+            </div>
+        </header>
+
+        <!-- Section D-->
+        <section id="section-d" class="grid">
+            <div class="box">
+                <h2 class="content-title">About Us</h2>
+                <p>Link to Privacy Page and about section
+                </p>
+            </div>
+            <div class="box">
+                <h2 class="content-title">Contact Us</h2>
+                <p> If you have any questions feel free to send me an email or explore my tutors.com profile!</p>
+                <p>insert some contact info</p>
+                <p>maybe stick linkedin Page</p>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer id="main-footer" class="grid">
+        <div>Spotify Unlocked</div>
+        <div>Project by <a href="linkedin.com/in/hasanghori/"
+        target="_blank">Minaltra WebDev</a></div>
+    </footer>
+    <script src="https://unpkg.com/ionicons@5.2.3/dist/ionicons.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+    </body>
+</html>
