@@ -22,6 +22,7 @@ cache.init_app(app)
 
 db = SQLAlchemy(app)
 
+#Database Models
 class users(db.Model):
     id = db.Column("id", db.Integer, primary_key=True)
     username = db.Column(db.String(100))
@@ -91,9 +92,19 @@ class Songs(db.Model):
         return self.song
 
 
+@cache.memoize(timeout=300)
+def loadPlaylists(userID):
+    playlistLoad = PlaylistCreation()
+    playlists = playlistLoad.loadPlaylists(token=session["token"])
+    return playlists
+
+@app.route("/", methods=["POST", "GET"])
+def login():
+    return render_template("login.html")
+
 @app.route("/login", methods=["POST", "GET"])
-def create():
-        # lookup code query parameter from request
+def auth():
+    # Authenticate with Spotify
     scope = ' '.join([
         'user-read-email',
         'playlist-read-private',
@@ -108,41 +119,14 @@ def create():
     token = auth.get_access_token(code)['access_token']
     session["token"] = token
 
-    webBackend = PlaylistCreation()
-
-
-    spotifyObject = Spotify(auth=session["token"])
-    spotifyUser = spotifyObject.current_user()
-    spotifyID = spotifyUser['id']
-    found_user = users.query.filter_by(username=spotifyID).first()
-    if not found_user:
-        newUser = users(username=spotifyID)
-        db.session.add(newUser)
-        db.session.commit()
-        found_user = users.query.filter_by(username=spotifyID).first()
-
-    loadPlaylists(spotifyID)
-    recommendations = [["70TM2AQY0TiC539o01iFJQ" ,"Create a Vibe Now to get Song Recomendations"]]
-
-    if len(found_user.mood) > 0:
-        print("here")
-        recommendations = []
-        for x in range(0, 4):
-            vibe = random.choice(found_user.mood)
-            songsList = []
-            for y in range(0, 4):
-                songsList.append(str(random.choice(vibe.songs)))
-            print(songsList)
-            recommendations.append([webBackend.homepageRecs(session["token"], songsList), vibe.vibeName])
-
-    return render_template("homepage.html", songs=recommendations)
-
+    return redirect("/home")
+    
 @app.route("/home", methods=["POST", "GET"])
 def home():
 
     webBackend = PlaylistCreation()
 
-
+    #find or create new user
     spotifyObject = Spotify(auth=session["token"])
     spotifyUser = spotifyObject.current_user()
     spotifyID = spotifyUser['id']
@@ -156,23 +140,15 @@ def home():
     loadPlaylists(spotifyID)
     recommendations = [["Create a Vibe Now to get Song Recomendations"]]
     if len(found_user.mood) > 0:
-        print("here")
         recommendations = []
         for x in range (0, 4):
             vibe = random.choice(found_user.mood)
             songsList = []
             for y in range (0, 4):
                 songsList.append(str(random.choice(vibe.songs)))
-            print(songsList)
             recommendations.append([webBackend.homepageRecs(session["token"], songsList), vibe.vibeName])
 
     return render_template("homepage.html", songs=recommendations)
-
-@cache.memoize(timeout=300)
-def loadPlaylists(userID):
-    playlistLoad = PlaylistCreation()
-    playlists = playlistLoad.loadPlaylists(token=session["token"])
-    return playlists
 
 @app.route("/<usr>")
 def user(usr):
@@ -210,7 +186,6 @@ def shuffle():
             for song in moodFound.songs:
                 songsListLoaded.append(str(song))
 
-
             if request.form["Playlist"] == "NOPLAYLIST":
                 playlistCreation.recomendations(token=session["token"], tracksFullList=songsListLoaded,
                                             shuffleTime=request.form["time"])
@@ -244,7 +219,7 @@ def shuffle():
 @app.route("/vibe", methods=["POST", "GET"])
 def vibe():
     if request.method == "POST":
-        #request.form["VibeName"]
+        
         playlistCreation = PlaylistCreation()
 
         if request.form["playlistName"] == '$L1k3dS0nGz$':
@@ -252,59 +227,29 @@ def vibe():
         else:
             clustersAndError_GenreDict = playlistCreation.newCreateVibe(playlistName=request.form["playlistName"],
                                                        token=session["token"])
-        #serialized = clustersAndError_GenreDict[0]
         genreDict = clustersAndError_GenreDict[1]
         songIDList = clustersAndError_GenreDict[2]
         error = clustersAndError_GenreDict[0][1]
-        #json_songIDList = json.dumps(songIDList)
-        genresTest = playlistCreation.testGenres(genreDict)
-        #genreDict = json.dumps(genreDict)
-        songsDict = playlistCreation.findSongsToTest(genresTest, session["token"])
-
+        
         #new stuff
         spotifyObject = Spotify(auth=session["token"])
         spotifyUser = spotifyObject.current_user()
         spotifyID = spotifyUser['id']
-        found_user = users.query.filter_by(username=spotifyID).first()  # how to make a new user!!!?
+        found_user = users.query.filter_by(username=spotifyID).first()
         returnState = ""
-        if found_user:
-            if len(found_user.mood) > 0:
-                for mood in found_user.mood:
-                    if mood.vibeName == request.form["VibeName"]:
-                        returnState = "can't return since you have a vibe of this name already"
-                if returnState == "":
-                    mood1 = Mood(request.form["VibeName"], adds=int(0), error=error,  public=("public" == request.form["privacy"]),
-                                  user_id=found_user.id)
-                    db.session.add(mood1)
-                    db.session.commit()
-                    for cluster in clustersAndError_GenreDict[0][0]:
-                        clusterList = list(cluster)
-                        clusterString = playlistCreation.finalListToStringEncoder(clusterList)
-                        #clusterString = json.dumps(clusterstr)
-                        addCluster = Clusters(cluster=clusterString, moodId=mood1.id)
-                        db.session.add(addCluster)
-                        db.session.commit()
-                    for song in songIDList:
-                        addSong = Songs(song=song, moodId=mood1.id)
-                        db.session.add(addSong)
-                    db.session.commit()
-                    for genre in genreDict.keys():
-                        addGenre = Genres(genre=genre, moodId=mood1.id)
-                        db.session.add(addGenre)
-                    db.session.commit()
-                    moodID = mood1.id
-
-                    #songsDict = playlistCreation.findSongsToTest(genresTest, session["token"])
-            else:
-                mood1 = Mood(request.form["VibeName"], adds=int(0), error=error,
-                             public=("public" == request.form["privacy"]),
-                             user_id=found_user.id)
+        if len(found_user.mood) > 0:
+            for mood in found_user.mood:
+                if mood.vibeName == request.form["VibeName"]:
+                    returnState = "can't return since you have a vibe of this name already"
+        if returnState == "":
+                #Create a Vibe
+                mood1 = Mood(request.form["VibeName"], adds=int(0), error=error,  public=("public" == request.form["privacy"]),
+                                user_id=found_user.id)
                 db.session.add(mood1)
                 db.session.commit()
                 for cluster in clustersAndError_GenreDict[0][0]:
                     clusterList = list(cluster)
                     clusterString = playlistCreation.finalListToStringEncoder(clusterList)
-                    # clusterString = json.dumps(clusterstr)
                     addCluster = Clusters(cluster=clusterString, moodId=mood1.id)
                     db.session.add(addCluster)
                     db.session.commit()
@@ -317,31 +262,7 @@ def vibe():
                     db.session.add(addGenre)
                 db.session.commit()
                 moodID = mood1.id
-
-        else:
-            mood1 = Mood(request.form["VibeName"], adds=int(0), error=error,
-                         public=("public" == request.form["privacy"]),
-                         user_id=found_user.id)
-            db.session.add(mood1)
-            db.session.commit()
-            for cluster in clustersAndError_GenreDict[0][0]:
-                clusterList = list(cluster)
-                clusterString = playlistCreation.finalListToStringEncoder(clusterList)
-                # clusterString = json.dumps(clusterstr)
-                addCluster = Clusters(cluster=clusterString, moodId=mood1.id)
-                db.session.add(addCluster)
-                db.session.commit()
-            for song in songIDList:
-                addSong = Songs(song=song, moodId=mood1.id)
-                db.session.add(addSong)
-            db.session.commit()
-            for genre in genreDict.keys():
-                addGenre = Genres(genre=genre, moodId=mood1.id)
-                db.session.add(addGenre)
-            db.session.commit()
-            moodID = mood1.id
-        session['songsDict'] = songsDict
-        session['moodID'] = moodID
+        
         return redirect(url_for("user", usr="Songs have been Added"))
 
     else:
@@ -350,38 +271,6 @@ def vibe():
         spotifyID = spotifyUser['id']
         playlists = loadPlaylists(spotifyID)
         return render_template("spotifyVibeMaker.html", playlists=playlists) #create vibe page
-
-
-@app.route("/songTest", methods=["POST", "GET"])
-def songTest():
-    if request.method == "POST":
-        songsDict = session['songsDict']
-        moodID = session['moodID']
-
-        spotifyObject = Spotify(auth=session["token"])
-        spotifyUser = spotifyObject.current_user()
-        spotifyID = spotifyUser['id']
-        found_user = users.query.filter_by(username=spotifyID).first()
-        playlistCreation = PlaylistCreation()
-
-
-        for mood in found_user.mood:
-            if moodID == mood.id:
-                genres = mood.genreRepresentation
-                genresDict = json.loads(genres)
-                for song in songsDict:
-                    if request.form[song] != "FALSE":
-                        genresDict = playlistCreation.refineGenreVibe(genresDict, request.form[song])
-                mood.genreRepresentation = json.dumps(genresDict)
-                break
-
-        return redirect(url_for("user", usr="Songs have been Added"))
-
-    else:
-        songsDict = session['songsDict']
-        return render_template("songTest.html", songsDict=songsDict)
-
-
 
 @app.route("/playlistCreation", methods=["POST", "GET"])
 def playlistCreation():
@@ -419,11 +308,6 @@ def playlistCreation():
         playlists = loadPlaylists(spotifyID)
         found_user = users.query.filter_by(username=spotifyID).first()
         return render_template("playlistCreation.html", playlists=playlists, vibes=found_user.mood) #playlistCreation html page
-
-@app.route("/", methods=["POST", "GET"])
-def login():
-    return render_template("login.html") # redirects you through to the name function
-#https://accounts.spotify.com/authorize?client_id=0564e53d485643aaa292796e7d73cc43&response_type=code&redirect_uri=http%3A%2F%2Fspotifypro.pythonanywhere.com&scope=user-read-email%20playlist-read-private%20playlist-modify-private%20playlist-modify-public
 
 @app.route("/VibeViewer", methods=["POST", "GET"])
 def vibeviewer():
